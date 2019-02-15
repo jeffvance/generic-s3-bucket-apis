@@ -4,13 +4,31 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
-// NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
+type ObjectBucketSource struct {
+	// Host the host URL of the object store with
+	Host string `json:"host"`
+	// Region the region of the bucket within an object store
+	Region string `json:"region"`
+	// Port the insecure port number of the object store, if it exists
+	Port int `json:"port"`
+	// SecrePort the secure port number of the object store, if it exists
+	SecurePort int `json:"securePort"`
+	// SSL true if the connection is secured with SSL, false if it is not.
+	SSL bool `json:"ssl"`
+	// SupportsTenants true if the object store provider supports the use of Tenants
+	Tenant string `json:"tenant,omitempty"`
+	// SuppotsNamespace true if the object store provider supports Namespaces
+	Namespace string `json:"namespace,omitempty"`
+	// Versioned true if the object store support versioned buckets, false if not
+	Versioned bool `json:"versioned,omitempty"`
+}
 
 // ObjectBucketSpec defines the desired state of ObjectBucket
 type ObjectBucketSpec struct {
-	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-	// Important: Run "operator-sdk generate k8s" to regenerate code after modifying this file
+	Provisioner string
+	BucketName  string
+
+	ObjectBucketSource ObjectBucketSource
 }
 
 // ObjectBucketStatus defines the observed state of ObjectBucket
