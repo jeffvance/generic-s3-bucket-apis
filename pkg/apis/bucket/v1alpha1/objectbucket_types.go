@@ -1,6 +1,7 @@
 package v1alpha1
 
 import (
+	"k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -11,7 +12,7 @@ type ObjectBucketSource struct {
 	Region string `json:"region"`
 	// Port the insecure port number of the object store, if it exists
 	Port int `json:"port"`
-	// SecrePort the secure port number of the object store, if it exists
+	// SecurePort the secure port number of the object store, if it exists
 	SecurePort int `json:"securePort"`
 	// SSL true if the connection is secured with SSL, false if it is not.
 	SSL bool `json:"ssl"`
@@ -25,16 +26,22 @@ type ObjectBucketSource struct {
 
 // ObjectBucketSpec defines the desired state of ObjectBucket
 type ObjectBucketSpec struct {
-	Provisioner string
-	BucketName  string
-
-	ObjectBucketSource ObjectBucketSource
+	BucketName         string
+	ObjectBucketSource *ObjectBucketSource
 }
+
+type ObjectBucketStatusPhase string
+
+const (
+	ObjectBucketStatusPhasePending ObjectBucketStatusPhase = "pending"
+	ObjectBucketStatusPhaseBound ObjectBucketStatusPhase = "bound"
+	ObjectBucketStatusPhaseLost ObjectBucketStatusPhase = "lost"
+	ObjectBucketStatusPhaseError ObjectBucketStatusPhase = "error" // TODO do we need this?
+)
 
 // ObjectBucketStatus defines the observed state of ObjectBucket
 type ObjectBucketStatus struct {
-	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
-	// Important: Run "operator-sdk generate k8s" to regenerate code after modifying this file
+	Controller *v1.ObjectReference
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
